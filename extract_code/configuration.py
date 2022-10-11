@@ -1,0 +1,3 @@
+API_BASE_URL = 'http://v0.ovapi.nl'
+ENDPOINT = 'line'
+PER_LINE_ENDPOINT_REQUEST = f"{API_BASE_URL}/{ENDPOINT}/"
