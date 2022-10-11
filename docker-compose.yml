@@ -1,0 +1,27 @@
+version: '2.1'
+services:
+    postgres:
+        image: postgres:latest
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=postgres
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        volumes:
+            - ./data:/var/lib/postgresql/data/pgdata
+        ports:
+            - "5432:5432"
+        logging:
+            options:
+                max-size: 10m
+                max-file: "3"
+
+    pgadmin:
+        image: dpage/pgadmin4
+        depends_on:
+            - postgres
+        ports:
+            - "8080:80"
+        environment:
+            - PGADMIN_DEFAULT_EMAIL=user@domain.com
+            - PGADMIN_DEFAULT_PASSWORD=SuperSecret
