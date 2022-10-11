@@ -1,18 +1,21 @@
-import json
 import pandas
-
-with open('/home/osboxes/gitlab/blablacar_usecase1/response.json', 'r') as json_file:
-    data = json.load(json_file)
-
-lines = []
+import json
 
 
-#def line_mapper_to_record(data):
-for _, key_line in enumerate(data.keys()):
-    lines.append({'Line': key_line, **data[key_line]})
+def line_mapper_to_record(json_data):
+    records = []
+    for _, key_line in enumerate(json_data.keys()):
+        records.append({'Line': key_line, **json_data[key_line]})
+    return records
 
 
-#print(lines)
+def transpose_df(dataframe=None):
+    return dataframe.T
 
-df = pandas.DataFrame(data=lines)
-print(df.head(5))
+
+def list_records_to_df(list_records):
+    return pandas.DataFrame(data=list_records)
+
+
+def dqm(dataframe, nan_value='-', missing_value='-'):
+    return dataframe.fillna(value=nan_value).replace('', missing_value)
