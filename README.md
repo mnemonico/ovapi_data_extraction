@@ -1,20 +1,9 @@
-list of available Line's example: 
-- VTN_1_1 : BUS
-    - "DataOwnerCode": "VTN"
-    - "LinePublicNumber": "1"
-    - "LineDirection": "1"
-- HTM_6_1 : TRAM
-    - "DataOwnerCode": "HTM"
-    - "LinePublicNumber": "6"
-    - "LineDirection": "1"
-- HTM_6_2 : HTM
-    - "DataOwnerCode": "HTM"
-    - "LineDirection": "2"
-
-dataownercode,
-lineplanningnumber
-direction
-LineName, 
-LinePublicnumber
-TransportType
-Destination
+- clone the project
+- virtualenv venv
+- pip install -r requirements
+- pip install apache-airflow  (PyPI basic package only installs what’s needed to get started)
+- docker compose -f docker-compose.yml up -d
+- export AIRFLOW_HOME="${PWD}/extract_code"
+- airflow scheduler 
+  - y
+- airflow run task blablacar_usecase_dag 2022-10-13
