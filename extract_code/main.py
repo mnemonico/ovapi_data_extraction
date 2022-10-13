@@ -1,27 +1,57 @@
-import logging
 import requests
-import pandas
-from utils import line_mapper_to_record, list_records_to_df, dqm
+from logger import usecase_logger
+from orm import db_engine, create_table, get_table_object, stmt_insert_update
+from utils import line_mapper_to_record, list_records_to_df, dqm, read_jsonfile
 from configuration import PER_LINE_ENDPOINT_REQUEST, MAX_ATTEPTS, WAIT_EXPONENTIAL_MAX, WAIT_EXPONENTIAL_MULTIPLAYER, WAIT_EXPONENTIAL_MIN, NAN_VALUE, MISSING_VALUE
 from requests import HTTPError, RequestException, Timeout, ReadTimeout, URLRequired
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
+from dialect_datacatalog import line_table
 
-logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logger = usecase_logger(__name__)
 
 
 @retry(retry=retry_if_exception_type(exception_types=(RequestException, Timeout, ReadTimeout)),
        wait=wait_exponential(multiplier=1, min=4, max=10),
        stop=stop_after_attempt(100))
 def get_lines():
-    logger.debug('sending requesting')
+    logger.debug('start extraction')
+    logger.debug('sending requesting to api')
     response = requests.get(url=PER_LINE_ENDPOINT_REQUEST)
     content_json = response.json()
     logger.debug('response status : {code}'.format(code=response.status_code))
     return content_json
 
 
-records = line_mapper_to_record(json_data=get_lines())
-df = list_records_to_df(list_records=records)
-df_dqm = dqm(dataframe=df, nan_value=NAN_VALUE, missing_value=MISSING_VALUE)
-print(df_dqm.head(10))
+def sql_ddl(tablename=None):
+    create_table(*line_table['ddl'],
+                 tablename='ods_{feed}'.format(feed=tablename),
+                 engine=db_engine)
+
+
+def retreive_table(tablename=None):
+    return get_table_object(tablename=tablename, engine=db_engine)
+
+
+def main():
+    # calling api /line endpoint to fetch lines data
+    json_data = get_lines()
+    # transform json api response to list of dict record
+    records = line_mapper_to_record(json_data=json_data)
+
+    # generate dataframe from list of records
+    df = list_records_to_df(list_records=records)
+    # simple data quality function to process nan, empty, columns order
+    df_dqm = dqm(dataframe=df, nan_value=NAN_VALUE, missing_value=MISSING_VALUE, columns_order=line_table['columns'])
+    # transform dataframe to list of dict record
+    data_records = df_dqm.to_dict(orient='records')
+
+    # create table programmatically
+    sql_ddl(tablename=line_table['tablename'])
+    # get table orm object to interact with it in class method way
+    line = retreive_table(tablename='line')
+    # sql upsert with specific postgres dialects
+    stmt_insert_update(table=line, records_to_insert=data_records)
+
+
+if __name__ == '__main__':
+    main()
