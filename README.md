@@ -15,6 +15,10 @@
   - http://0.0.0.0:8080/
     - username: user@domain.com
     - password: SuperSecret
+  - once connected to pgadmin; connect to the local database instance
+    - username: postgres
+    - password: postgres
+    - database: postgres
 - check table ```public.ods_line``` on ```postgres``` database
 
 
