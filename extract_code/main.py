@@ -15,6 +15,11 @@ logger = usecase_logger(__name__)
        wait=wait_exponential(multiplier=WAIT_EXPONENTIAL_MULTIPLAYER, min=WAIT_EXPONENTIAL_MIN, max=WAIT_EXPONENTIAL_MAX),
        stop=stop_after_attempt(MAX_ATTEPTS))
 def get_lines():
+    """
+    this function take as decorator retry behavior for processing the api call without having request typical error of
+    limitation, pool connection, timeouts, ...
+    :return:
+    """
     logger.debug('start extraction')
     logger.debug('sending requesting to api')
     response = requests.get(url=PER_LINE_ENDPOINT_REQUEST)
