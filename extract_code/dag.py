@@ -1,47 +1,53 @@
-from __future__ import annotations
-
-import logging
-
-import pendulum
-
-from airflow import DAG
-from airflow.decorators import task
-
+from airflow.operators.python import PythonOperator
+from airflow.models import DAG
+from datetime import datetime
+from time import sleep
 from main import main
 
-log = logging.getLogger(__name__)
+execution_date = datetime.today()
 
-with DAG(
+args = {
+    'owner': 'airflow',
+    'start_date': execution_date,
+}
+
+dag = DAG(
     dag_id='blablacar_usecase_dag',
-    schedule=None,
-    start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
+    default_args=args,
     catchup=False,
-    tags=['example'],
-) as dag:
-
-    @task(task_id="finish_api_extraction")
-    def c(ds=None, **kwargs):
-        print(kwargs)
-        return 'dummy return'
-
-    run_this_c = c()
-
-    @task(task_id="main_processing")
-    def b(**kwargs):
-        logging.info('main processing debut')
-        logging.info('execution_date : {}'.format(kwargs['ds']))
-        logging.info('dag name : {}'.format(kwargs['dag']))
-        main()
-        logging.info('main processing end')
-
-    run_this_b = b()
+    schedule=None,
+    tags=['dummy_run'])
 
 
-    @task(task_id="start_api_extraction")
-    def a(ds=None, **kwargs):
-        print(kwargs)
-        return 'dummy return'
+def dummy_start_task(ds, **kwargs):
+    print(kwargs)
+    print(ds)
+    return sleep(2)
 
-    run_this_a = a()
 
-    run_this_a >> run_this_b >> run_this_c
+def dummy_end_task(ds, **kwargs):
+    print(kwargs)
+    print(ds)
+    return sleep(2)
+
+
+def extraction_main(ds, **kwargs):
+    print(kwargs)
+    print(ds)
+    return main()
+
+
+python_operator_t1 = PythonOperator(
+    task_id='debut_task',
+    python_callable=dummy_start_task,
+    dag=dag)
+
+python_operator_t3 = PythonOperator(
+    task_id='end_task',
+    python_callable=dummy_end_task,
+    dag=dag)
+
+python_operator_t2 = PythonOperator(
+    task_id='api_call_processing_db_upsert_task',
+    python_callable=extraction_main,
+    dag=dag)

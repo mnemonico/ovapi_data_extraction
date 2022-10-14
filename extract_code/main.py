@@ -7,12 +7,13 @@ from requests import HTTPError, RequestException, Timeout, ReadTimeout, URLRequi
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
 from dialect_datacatalog import line_table
 
+
 logger = usecase_logger(__name__)
 
 
 @retry(retry=retry_if_exception_type(exception_types=(RequestException, Timeout, ReadTimeout)),
-       wait=wait_exponential(multiplier=1, min=4, max=10),
-       stop=stop_after_attempt(100))
+       wait=wait_exponential(multiplier=WAIT_EXPONENTIAL_MULTIPLAYER, min=WAIT_EXPONENTIAL_MIN, max=WAIT_EXPONENTIAL_MAX),
+       stop=stop_after_attempt(MAX_ATTEPTS))
 def get_lines():
     logger.debug('start extraction')
     logger.debug('sending requesting to api')

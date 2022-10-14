@@ -1,9 +1,23 @@
-- clone the project
-- virtualenv venv
-- pip install -r requirements
-- pip install apache-airflow  (PyPI basic package only installs what’s needed to get started)
-- docker compose -f docker-compose.yml up -d
-- export AIRFLOW_HOME="${PWD}/extract_code"
-- airflow scheduler 
-  - y
-- airflow run task blablacar_usecase_dag 2022-10-13
+### Pre-requisites :
+  - python >= 3.8.*
+    - virutalenv or virtualenvwrapper
+  - docker == 20.10.18
+    - docker compose (plugin)
+
+### Execute step by step on your linux machine:
+- ```cd $HOME  && git clone https://github.com/mnemonico/blablacar_usecase1.git && cd blablacar_usecase1```
+- ```virtualenv venv``` or ```mkvirtualenv venv``` if you've virtualenvwrapper
+- ```pip install -r requirements.txt``` 
+- ```docker compose -f docker-compose.yml up -d```
+- ```docker ps``` (make sure containers are up)
+- ```python extract_code/dag_executor.py```
+- on the browser enter the url
+  - http://0.0.0.0:8080/
+    - username: user@domain.com
+    - password: SuperSecret
+- check table ```public.ods_line``` on ```postgres``` database
+
+
+
+
+[usecase github repository](https://github.com/mnemonico/blablacar_usecase1.git)
