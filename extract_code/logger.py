@@ -2,6 +2,11 @@ import logging
 
 
 def usecase_logger(filename):
+    """
+    return a logger
+    :param filename:
+    :return:
+    """
     logger = logging.getLogger(filename)
     handler = logging.StreamHandler()
     handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))

@@ -16,11 +16,21 @@ db_engine = create_engine(url="postgresql://{user}:{password}@{host}:{port}/{nam
 
 
 def session_instance():
+    """
+    creating session toward the database to start transaction operation
+    :return:
+    """
     logger.debug('initiating database session')
     return Session(db_engine)
 
 
 def table_if_exists(tablename=None, engine=None):
+    """
+    check if table exists in the target database instance
+    :param tablename:
+    :param engine:
+    :return:
+    """
     assert isinstance(tablename, str), 'tablename should be string'
     assert engine is not None, 'you should instantiate the database engine first'
     logger.debug('checking if table <{}> exists'.format(tablename))
@@ -29,6 +39,12 @@ def table_if_exists(tablename=None, engine=None):
 
 
 def get_table_object(tablename=None, engine=None):
+    """
+    return table if exists in the target database instance
+    :param tablename:
+    :param engine:
+    :return:
+    """
     assert isinstance(tablename, str), 'check tablename type or value'
     assert engine is not None, 'you should instantiate the database engine first'
     logger.debug('returning orm table <{}> object if exists'.format(tablename))
@@ -37,6 +53,13 @@ def get_table_object(tablename=None, engine=None):
 
 
 def create_table(*columns, tablename=None, engine=None):
+    """
+    create table in the target database instance if not exists
+    :param columns:
+    :param tablename:
+    :param engine:
+    :return:
+    """
     assert isinstance(tablename, str), 'tablename should be string'
     assert engine is not None, 'you should instantiate the database engine first'
     logger.debug('create table <{}> if not exists'.format(tablename))
@@ -51,6 +74,12 @@ def create_table(*columns, tablename=None, engine=None):
 
 
 def stmt_insert_update(table, records_to_insert):
+    """
+    execute an insert with 'on conflict do update' statement for a set of dict records
+    :param table:
+    :param records_to_insert:
+    :return:
+    """
     logger.debug('upserting data into table <{}>'.format(table.name))
     with session_instance() as o_session:
         for record in records_to_insert:
@@ -71,6 +100,13 @@ def stmt_insert_update(table, records_to_insert):
 
 
 def stmt_delete(table, key, records_to_delete):
+    """
+    execute a delete statement for a set of dict records
+    :param table:
+    :param key:
+    :param records_to_delete:
+    :return:
+    """
     logger.debug('removing data from table')
     with session_instance() as o_session:
         for record in records_to_delete:
