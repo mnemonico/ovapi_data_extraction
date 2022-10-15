@@ -54,6 +54,7 @@ def dqm(dataframe, nan_value='-', missing_value='-', columns_order=None, date_fo
     assert not dataframe.empty or dataframe is not None, 'dataframe should not be None or empty'
     assert columns_order is not None, 'list of columns should not be None or empty'
     logger.debug('data quality processing')
+    logger.debug('dataframe shape : {}'.format(dataframe.shape))
     dataframe = dataframe.fillna(value=nan_value).replace('', missing_value)
     dataframe['extraction_date'] = datetime.strftime(datetime.today(), date_format)
     if columns_order:

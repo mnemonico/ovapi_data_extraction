@@ -87,10 +87,15 @@ def stmt_insert_update(table, records_to_insert):
                 insert(table).
                 values(record)
             )
-            record['last_updated'] = datetime.utcnow()
+
+            updated_excluded = dict(stmt_simple_insert.excluded)
+            del updated_excluded['extraction_date']
+            updated_excluded['last_updated'] = datetime.utcnow()
+
             on_conflict_key_stmt = stmt_simple_insert.on_conflict_do_update(
                 constraint=table.primary_key,
-                set_={k: v for k, v in record.items() if k not in 'extraction_date'}
+                set_=updated_excluded
+                # set_={k: v for k, v in record.items() if k not in 'extraction_date'}
             )
             o_session.execute(statement=on_conflict_key_stmt)
             o_session.commit()
