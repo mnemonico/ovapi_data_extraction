@@ -20,7 +20,6 @@ def get_lines():
     limitation, pool connection, timeouts, ...
     :return:
     """
-    logger.debug('start extraction')
     logger.debug('sending requesting to api')
     response = requests.get(url=PER_LINE_ENDPOINT_REQUEST)
     content_json = response.json()
@@ -39,6 +38,7 @@ def retreive_table(tablename=None):
 
 
 def main():
+    logger.debug('start extraction')
     # calling api /line endpoint to fetch lines data
     json_data = get_lines()
     # transform json api response to list of dict record
@@ -57,6 +57,7 @@ def main():
     line = retreive_table(tablename='line')
     # sql upsert with specific postgres dialects
     stmt_insert_update(table=line, records_to_insert=data_records)
+    logger.debug('extraction finished')
 
 
 if __name__ == '__main__':
