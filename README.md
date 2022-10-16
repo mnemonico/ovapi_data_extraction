@@ -6,12 +6,12 @@
 
 ### Execute step by step on your linux machine:
 - ```cd $HOME  && git clone https://github.com/mnemonico/blablacar_usecase1.git && cd blablacar_usecase1```
-- ```virtualenv venv``` or ```mkvirtualenv venv``` if you've virtualenvwrapper
+- ```virtualenv venv``` or ```mkvirtualenv venv && workon venv``` if you've virtualenvwrapper
 - ```pip install -r requirements.txt``` 
 - ```docker compose -f docker-compose.yml up -d```
 - ```docker ps``` (make sure containers are up)
 - ```python extract_code/dag_executor.py```
-- on the browser enter the url
+- after the end of the previous execution, pass to the browser then enter the url
   - http://0.0.0.0:8080/
     - username: user@domain.com
     - password: SuperSecret
