@@ -98,7 +98,7 @@ def stmt_insert_update(table, records_to_insert):
                 # set_={k: v for k, v in record.items() if k not in 'extraction_date'}
             )
             o_session.execute(statement=on_conflict_key_stmt)
-            o_session.commit()
+        o_session.commit()
     logger.debug('upserting data finished with success')
 
     return True
