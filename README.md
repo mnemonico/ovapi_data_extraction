@@ -23,7 +23,7 @@
     - password: postgres
     - database: postgres
 - check table ```public.ods_line``` on ```postgres``` database
-- to test the simple **dag** with (3 tasks) without any setup (usage via webserver and scheduler up)
+- to test the simple **dag** with (3 tasks) without any setup (without usage via webserver and scheduler up)
   - cd $WORKSPACE && python extract_code/dag_executor.py 
 
 
