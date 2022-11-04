@@ -4,6 +4,9 @@
   - docker == 20.10.18
     - docker compose (plugin)
 
+### OVapi :
+  - wiki : https://github.com/koch-t/KV78Turbo-OVAPI/wiki
+
 ### Execute step by step on your linux machine:
 - ```cd $HOME  && git clone https://github.com/mnemonico/blablacar_usecase1.git && cd blablacar_usecase1 && export WORKSPACE=\`pwd\` ```
 - ```virtualenv venv``` or ```mkvirtualenv venv && workon venv``` if you've virtualenvwrapper
