@@ -4,8 +4,11 @@
   - docker == 20.10.18
     - docker compose (plugin)
 
+### OVapi :
+  - wiki : https://github.com/koch-t/KV78Turbo-OVAPI/wiki
+
 ### Execute step by step on your linux machine:
-- ```cd $HOME  && git clone https://github.com/mnemonico/blablacar_usecase1.git && cd blablacar_usecase1 && export WORKSPACE=\`pwd\` ```
+- ```cd $HOME  && git clone https://github.com/mnemonico/ovapi_data_extraction.git && cd ovapi_data_extraction && export WORKSPACE=\`pwd\` ```
 - ```virtualenv venv``` or ```mkvirtualenv venv && workon venv``` if you've virtualenvwrapper
 - ```pip install -r requirements.txt``` 
 - ```docker compose -f docker-compose.yml up -d```
@@ -20,10 +23,10 @@
     - password: postgres
     - database: postgres
 - check table ```public.ods_line``` on ```postgres``` database
-- to test the simple **dag** with (3 tasks) without any setup (usage via webserver and scheduler up)
+- to test the simple **dag** with (3 tasks) without any setup (without usage via webserver and scheduler up)
   - cd $WORKSPACE && python extract_code/dag_executor.py 
 
 
 
 
-[usecase github repository](https://github.com/mnemonico/blablacar_usecase1.git)
+[usecase github repository](https://github.com/mnemonico/ovapi_data_extraction.git)
